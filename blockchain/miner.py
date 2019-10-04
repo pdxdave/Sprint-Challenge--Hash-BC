@@ -9,6 +9,22 @@ from timeit import default_timer as timer
 
 import random
 
+# Ok, what do I know?  
+# I know that I need to validate the proof. 
+# I know that I have to create a hash using SHA-256.  The hash will go in the valid_proof def. The instructions refer to it there.
+# I know that in order to validate the proof I will have to loop through a series of numbers.  
+# I know that I will need some sort of solution to compare the first six numbers of the hash to the last six numbers of the hash.
+# I see in the notes they are specifically saying last hash and new hash.
+# The class example for SHA-256 included .hexdigest().
+# Doesn't it have to be encoded too?  Combine the two?  How would I do that? 
+
+# TEST RESULTS
+# The first test didn't work.  I got the following error 
+# last_h = hashlib.sha256(encode(last_hash)).hexdigest()
+#    NameError: name 'encode' is not defined
+# I see that proof is a string in the print out.  Maybe I need to send the hash through a string then encode it
+# I changed it so the proof was sent through the string.  That seemed to work, but still got an error regarding
+# last hash.  Since they're comparing against each other, I'll send the last_h through the string as well.
 
 def proof_of_work(last_proof):
     """
@@ -24,8 +40,12 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
+    proof = 99999
     #  TODO: Your code here
+
+    # loop through the last_proof and proof while remaining false.  Then increase the proof by 1
+    while valid_proof(last_proof, proof) is False:
+        proof += 5
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -40,7 +60,14 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    
+    # create a last hash and a new hash
+    last_h = hashlib.sha256(str(last_hash).encode()).hexdigest()
+    new_h = hashlib.sha256(str(proof).encode()).hexdigest()
+
+    #compare the new numbers to the last numbers
+    return new_h[0:6] == last_h[-6:0]
+
 
 
 if __name__ == '__main__':
