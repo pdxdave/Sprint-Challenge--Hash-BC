@@ -10,11 +10,22 @@ from hashtables import (HashTable,
 
 
 def get_indices_of_item_weights(weights, length, limit):
-    ht = HashTable(16)
+    h_table = HashTable(16) # looks like 16 buckets
 
     """
     YOUR CODE HERE
     """
+
+    # first, loop through the items and insert them into the hashtable
+    for j in range(0, length):
+        hash_table_insert(h_table, weights[j], j)
+
+    # next, loop through and check the weights.
+    for j in range(0, length):
+        item = limit - weights[j]  # hint
+        index = hash_table_retrieve(h_table, item)
+        if index:
+            return (index, j)
 
     return None
 
