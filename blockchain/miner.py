@@ -26,6 +26,10 @@ import random
 # I changed it so the proof was sent through the string.  That seemed to work, but still got an error regarding
 # last hash.  Since they're comparing against each other, I'll send the last_h through the string as well.
 
+# Got my butt kicked.  Starting over again.  I wasn't getting errors, so I thought all was good. WRONG!
+# Changes:
+# Set my proof to an random integer when it comes back.  Maybe the plus 5 I had before is too generic
+
 def proof_of_work(last_proof):
     """
     Multi-Ouroboros of Work Algorithm
@@ -39,13 +43,16 @@ def proof_of_work(last_proof):
 
     start = timer()
 
-    print("Searching for next proof")
-    proof = 99999
-    #  TODO: Your code here
+    last_p = f'{last_proof}'.encode()
+    last_p_hash = hashlib.sha256(last_p).hexdigest()
 
-    # loop through the last_proof and proof while remaining false.  Then increase the proof by 1
-    while valid_proof(last_proof, proof) is False:
-        proof += 5
+    print("Searching for next proof")
+
+    #  TODO: Your code here
+    proof = 6584754
+
+    while valid_proof(last_p_hash, proof) is False:
+        proof += 8
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -59,16 +66,12 @@ def valid_proof(last_hash, proof):
     IE:  last_hash: ...AE9123456, new hash 123456888...
     """
 
-    # TODO: Your code here!
-    
-    # create a last hash and a new hash
-    last_h = hashlib.sha256(str(last_hash).encode()).hexdigest()
-    new_h = hashlib.sha256(str(proof).encode()).hexdigest()
+   # TODO: Your code here!
 
-    #compare the new numbers to the last numbers
-    return new_h[0:6] == last_h[-6:0]
+    guess = f'{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
 
-
+    return last_hash[-6:] == guess_hash[:6]
 
 if __name__ == '__main__':
     # What node are we interacting with?
